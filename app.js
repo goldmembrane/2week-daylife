@@ -4,14 +4,16 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
 const userRouter = require("./src/routes/users");
+const keywordRouter = require("./src/routes/keyword");
 
 const morgan = require("morgan");
 
 const app = express();
-const port = 3001;
+const port = 3002;
 
 app.use(cookieParser());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(morgan("dev"));
 
@@ -28,6 +30,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/users", userRouter);
+app.use("/keyword", keywordRouter);
 
 app.set("port", port);
 app.listen(app.get("port"), () => {

@@ -8,19 +8,18 @@ module.exports = {
       res.status(401).json({ message: "need user session" }).end();
     } else {
       let userId = jwt.verify(token, process.env.JWT_SECRET).id;
-      let keywords = req.query.keyword;
 
       keyword
         .findAll({
           where: {
             user_id: userId,
-            keyword: keywords,
           },
         })
         .then((data) => {
           res.status(200).json(data).end();
         })
         .catch((error) => {
+          console.log(error);
           res.status(501).send(error);
         });
     }
@@ -56,16 +55,17 @@ module.exports = {
       res.status(401).json({ message: "need user session" }).end();
     } else {
       let userId = jwt.verify(token, process.env.JWT_SECRET).id;
-      let id = req.query.id;
+      let keywords = req.body.keyword;
 
-      keyword.findOne({ where: { id: id, user_id: userId } }).then((data) => {
+      keyword.findOne({ where: { user_id: userId } }).then((data) => {
         if (data) {
           keyword
-            .destroy({ where: { id: id, user_id: userId } })
+            .destroy({ where: { user_id: userId, keyword: keywords } })
             .then(() => {
               res.status(200).json({ message: "Success" }).end();
             })
             .catch((error) => {
+              console.log(error);
               res.status(501).send(error);
             });
         } else {

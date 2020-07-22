@@ -8,13 +8,13 @@ module.exports = {
     console.log(email, password);
 
     users
-      .findOne({ where: { email } })
+      .findOne({ where: { email: email } })
       .then((user) => {
         if (user) {
           if (user.dataValues.password === password) {
             let payload = { id: user.id };
             let secret = process.env.JWT_SECRET;
-            jwt.sign(payload, secret, { expiresIn: "30m" }, (err, token) => {
+            jwt.sign(payload, secret, { expiresIn: "50m" }, (err, token) => {
               if (err) {
                 console.log(err);
                 res.status(500).send(err);
@@ -25,12 +25,12 @@ module.exports = {
             });
           }
         } else {
-          res.status(404).json({ message: "unvalid user" });
+          res.status(404).json({ message: "unvaild user" });
         }
       })
-      .catch((error) => {
-        console.log(error);
-        res.status(500).send(error);
+      .catch((err) => {
+        console.log(err);
+        res.status(500).send(err);
       });
   },
 };
