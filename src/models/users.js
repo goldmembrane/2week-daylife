@@ -1,5 +1,7 @@
 "use strict";
 
+const crypto = require("crypto");
+
 module.exports = (sequelize, DataTypes) => {
   const users = sequelize.define(
     "users",
@@ -8,7 +10,20 @@ module.exports = (sequelize, DataTypes) => {
       password: DataTypes.STRING,
       email: DataTypes.STRING,
     },
-    { timestamps: false }
+    {
+      timestamps: false,
+      hooks: {
+        afterValidate: (data, options) => {
+          var shaData = (password) => {
+            return crypto
+              .createHmac("sha1", "AAASUL")
+              .update(password)
+              .digest("base64");
+          };
+          data.password = shaData(data.password);
+        },
+      },
+    }
   );
   users.associate = function (models) {
     // associations can be defined here
