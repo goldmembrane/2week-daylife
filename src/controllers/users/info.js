@@ -30,13 +30,12 @@ module.exports = {
     if (!token) {
       res.status(401).json({ message: "need user session" });
     } else {
-      let userId = jwt.verify(token, secret).id;
-      let id = req.query.id;
+      let userId = jwt.verify(token, process.env.JWT_SECRET).id;
 
       let username = req.body.username;
       let password = req.body.password;
 
-      users.findOne({ where: { id: id, user_id: userId } }).then((data) => {
+      users.findOne({ where: { id: userId } }).then((data) => {
         if (data) {
           users
             .update(
@@ -44,13 +43,13 @@ module.exports = {
                 username: username,
                 password: password,
               },
-              { where: { id: id } }
+              { where: { id: userId } }
             )
             .then(() => {
               res.status(201).json({ message: "Success" }).end();
             });
         } else {
-          res.status(404).json({ message: "Success" }).end();
+          res.status(404).json({ message: "Update Error" }).end();
         }
       });
     }
