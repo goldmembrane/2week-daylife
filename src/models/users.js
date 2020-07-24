@@ -1,5 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
+const crypto = require("crypto");
 module.exports = (sequelize, DataTypes) => {
   class users extends Model {
     /**
@@ -9,6 +10,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      users.hasMany(models.keyword, {
+        foreignKey: "user_id",
+        as: "keywords",
+      });
     }
   }
   users.init(
@@ -21,6 +26,17 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "users",
       timestamps: false,
+      hooks: {
+        afterValidate: (data, options) => {
+          var shaData = (password) => {
+            return crypto
+              .createHmac("sha1", "AAASUL")
+              .update(`${password}`)
+              .digest("base64");
+          };
+          data.password = shaData(data.password);
+        },
+      },
     }
   );
   return users;

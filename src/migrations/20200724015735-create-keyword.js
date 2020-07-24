@@ -20,6 +20,9 @@ module.exports = {
       dismiss: {
         type: Sequelize.INTEGER,
       },
+      judicate: {
+        type: Sequelize.JSON,
+      },
     });
   },
   down: async (queryInterface, Sequelize) => {

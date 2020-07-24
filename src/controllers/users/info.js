@@ -33,25 +33,28 @@ module.exports = {
       let userId = jwt.verify(token, process.env.JWT_SECRET).id;
 
       let username = req.body.username;
-      let password = req.body.password;
-
-      users.findOne({ where: { id: userId } }).then((data) => {
-        if (data) {
-          users
-            .update(
-              {
-                username: username,
-                password: password,
-              },
-              { where: { id: userId } }
-            )
-            .then(() => {
-              res.status(201).json({ message: "Success" }).end();
-            });
-        } else {
-          res.status(404).json({ message: "Update Error" }).end();
-        }
-      });
+      users
+        .findOne({
+          where: { id: userId },
+        })
+        .then((data) => {
+          if (data) {
+            users
+              .update(
+                {
+                  username: username,
+                },
+                {
+                  where: { id: userId },
+                }
+              )
+              .then(() => {
+                res.status(201).json({ message: "Success" }).end();
+              });
+          } else {
+            res.status(404).json({ message: "Update Error" }).end();
+          }
+        });
     }
   },
 };

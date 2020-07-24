@@ -9,6 +9,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      judicial.belongsTo(models.keyword, {
+        foreignKey: "keyword_id",
+      });
     }
   }
   judicial.init(
