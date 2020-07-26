@@ -9,7 +9,8 @@ const keywordRouter = require("./src/routes/keyword");
 const morgan = require("morgan");
 
 const app = express();
-const port = 3002;
+const port = 3001;
+
 
 app.use(cookieParser());
 app.use(bodyParser.json());

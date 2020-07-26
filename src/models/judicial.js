@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class keyword extends Model {
+  class judicial extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -9,27 +9,21 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      keyword.belongsTo(models.users, {
-        foreignKey: "user_id",
-      });
-      keyword.hasMany(models.judicial, {
+      judicial.belongsTo(models.keyword, {
         foreignKey: "keyword_id",
-        as: "keywords",
       });
     }
   }
-  keyword.init(
+  judicial.init(
     {
-      user_id: DataTypes.INTEGER,
-      keyword: DataTypes.STRING,
-      total: DataTypes.INTEGER,
-      dismiss: DataTypes.INTEGER,
+      keyword_id: DataTypes.INTEGER,
+      judicate: DataTypes.JSON,
     },
     {
       sequelize,
-      modelName: "keyword",
+      modelName: "judicial",
       timestamps: false,
     }
   );
-  return keyword;
+  return judicial;
 };
