@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/goldmembrane/SUL-server#readme",
   "dependencies": {
+    "axios": "^0.19.2",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
@@ -32,6 +33,7 @@
     "nodemon": "^2.0.4",
     "request": "^2.88.2",
     "sequelize": "^6.3.3",
-    "sequelize-cli": "^6.2.0"
+    "sequelize-cli": "^6.2.0",
+    "xml-js": "^1.6.11"
   }
 }

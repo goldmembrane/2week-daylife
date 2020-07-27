@@ -1,6 +1,7 @@
 const { keyword } = require("../../models");
-const request = require("request");
+const axios = require("axios");
 const jwt = require("jsonwebtoken");
+const convert = require("xml-js");
 
 module.exports = {
   post: (req, res) => {
@@ -11,39 +12,49 @@ module.exports = {
       let keywords = req.body.keyword;
       let userId = jwt.verify(token, process.env.JWT_SECRET).id;
 
-      const url = `http://www.law.go.kr/DRF/lawSearch.do?OC=${process.env.API_KEY}`;
+      const url = `law.go.kr/DRF/lawSearch.do?OC=${process.env.API_KEY}`;
       const targetParams = `target=prec`;
-      const keywordParams = `query=${keywords}`;
-      const displayParams = `display=max`;
+      const keywordParams = `query=${encodeURI(keywords)}`;
+      const typeParams = `type=XML`;
+      const displayParams = `display=100`;
 
-      var judicate = request(
-        {
-          url:
-            url +
-            "&" +
-            targetParams +
-            "&" +
-            keywordParams +
-            "&" +
-            displayParams,
-          method: "POST",
-        },
-        function (error, response, body) {
-          if (!error && response.statusCode === 200) {
-            console.log(body);
-          }
-        }
-      );
+      const resultURL =
+        url +
+        "&" +
+        targetParams +
+        "&" +
+        typeParams +
+        "&" +
+        keywordParams +
+        "&" +
+        displayParams;
+
+      axios({
+        method: "get",
+        url: resultURL,
+        responseType: "xml",
+      })
+        .then((response) => {
+          let result = convert.xml2json(response.data, {
+            compact: false,
+            spaces: 4,
+          });
+          console.log(result, "\n");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
       keyword
         .create({
           keyword: keywords,
           user_id: userId,
-          judicate: judicate,
         })
         .then((data) => {
           res.status(201).json({ message: "Success" }).end();
         })
         .catch((error) => {
+          console.log(error);
           res.status(502).send(error);
         });
     }
