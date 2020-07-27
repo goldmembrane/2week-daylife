@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 
 const userRouter = require("./src/routes/users");
 const keywordRouter = require("./src/routes/keyword");
+const searchRouter = require("./src/routes/judicial");
 
 const morgan = require("morgan");
 
@@ -31,6 +32,7 @@ app.get("/", (req, res) => {
 
 app.use("/users", userRouter);
 app.use("/keyword", keywordRouter);
+app.use("/search", searchRouter);
 
 app.set("port", port);
 app.listen(app.get("port"), () => {

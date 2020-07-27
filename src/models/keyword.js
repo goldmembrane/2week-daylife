@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       keyword: DataTypes.STRING,
       total: DataTypes.INTEGER,
       dismiss: DataTypes.INTEGER,
+      judicate: DataTypes.JSON,
     },
     {
       sequelize,
