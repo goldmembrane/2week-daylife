@@ -1,0 +1,62 @@
+const { keyword } = require("../../models");
+const axios = require("axios");
+const jwt = require("jsonwebtoken");
+const convert = require("xml-js");
+
+module.exports = {
+  post: (req, res) => {
+    let token = req.cookies.token;
+    if (!token) {
+      res.status(401).json({ message: "need user session" }).end();
+    } else {
+      let keywords = req.body.keyword;
+      let userId = jwt.verify(token, process.env.JWT_SECRET).id;
+
+      const url = `law.go.kr/DRF/lawSearch.do?OC=${process.env.API_KEY}`;
+      const targetParams = `target=prec`;
+      const keywordParams = `query=${encodeURI(keywords)}`;
+      const typeParams = `type=XML`;
+      const displayParams = `display=100`;
+
+      const resultURL =
+        url +
+        "&" +
+        targetParams +
+        "&" +
+        typeParams +
+        "&" +
+        keywordParams +
+        "&" +
+        displayParams;
+
+      axios({
+        method: "get",
+        url: resultURL,
+        responseType: "xml",
+      })
+        .then((response) => {
+          let result = convert.xml2json(response.data, {
+            compact: false,
+            spaces: 4,
+          });
+          console.log(result, "\n");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      keyword
+        .create({
+          keyword: keywords,
+          user_id: userId,
+        })
+        .then((data) => {
+          res.status(201).json({ message: "Success" }).end();
+        })
+        .catch((error) => {
+          console.log(error);
+          res.status(502).send(error);
+        });
+    }
+  },
+};
