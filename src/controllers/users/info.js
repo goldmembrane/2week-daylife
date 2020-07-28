@@ -22,7 +22,7 @@ module.exports = {
         }
       });
     } else {
-      res.stauts(401).json({ message: "need user session" });
+      res.status(401).json({ message: "need user session" });
     }
   },
   put: (req, res) => {
@@ -49,7 +49,7 @@ module.exports = {
                 }
               )
               .then(() => {
-                res.status(201).json({ message: "Success" }).end();
+                res.status(200).json({ message: "Success" }).end();
               });
           } else {
             res.status(404).json({ message: "Update Error" }).end();

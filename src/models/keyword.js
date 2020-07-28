@@ -12,10 +12,6 @@ module.exports = (sequelize, DataTypes) => {
       keyword.belongsTo(models.users, {
         foreignKey: "user_id",
       });
-      keyword.hasMany(models.judicial, {
-        foreignKey: "keyword_id",
-        as: "keywords",
-      });
     }
   }
   keyword.init(
