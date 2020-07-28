@@ -12,7 +12,7 @@ module.exports = {
       let keywords = req.body.keyword;
       let userId = jwt.verify(token, process.env.JWT_SECRET).id;
 
-      const url = `law.go.kr/DRF/lawSearch.do?OC=${process.env.API_KEY}`;
+      const url = `http://law.go.kr/DRF/lawSearch.do?OC=${process.env.API_KEY}`;
       const targetParams = `target=prec`;
       const keywordParams = `query=${encodeURI(keywords)}`;
       const typeParams = `type=XML`;
@@ -29,26 +29,25 @@ module.exports = {
         "&" +
         displayParams;
 
-      axios({
-        method: "get",
-        url: resultURL,
-        responseType: "xml",
-      })
-        .then((response) => {
-          let result = convert.xml2json(response.data, {
-            compact: false,
-            spaces: 4,
-          });
-          console.log(result, "\n");
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-
       keyword
         .create({
           keyword: keywords,
           user_id: userId,
+          judicate: axios({
+            method: "get",
+            url: resultURL,
+            responseType: "xml",
+          })
+            .then((response) => {
+              let result = convert.xml2json(response.data, {
+                compact: false,
+                spaces: 4,
+              });
+              console.log(result, "\n");
+            })
+            .catch((error) => {
+              console.log(error);
+            }),
         })
         .then((data) => {
           res.status(201).json({ message: "Success" }).end();
@@ -56,6 +55,28 @@ module.exports = {
         .catch((error) => {
           console.log(error);
           res.status(502).send(error);
+        });
+    }
+  },
+  get: (req, res) => {
+    let token = req.cookies.token;
+    if (!token) {
+      res.status(401).json({ message: "need user session" }).end();
+    } else {
+      let userId = jwt.verify(token, process.env.JWT_SECRET).id;
+
+      keyword
+        .findAll({
+          where: {
+            user_id: userId,
+          },
+        })
+        .then((data) => {
+          res.status(200).json(data).end();
+        })
+        .catch((error) => {
+          console.log(error);
+          res.status(501).send(error);
         });
     }
   },
