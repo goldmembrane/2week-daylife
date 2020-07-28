@@ -31,8 +31,8 @@ module.exports = {
 
       keyword
         .create({
-          keyword: keywords,
           user_id: userId,
+          keyword: keywords,
           judicate: axios({
             method: "get",
             url: resultURL,
@@ -43,7 +43,8 @@ module.exports = {
                 compact: false,
                 spaces: 4,
               });
-              console.log(result, "\n");
+              console.log(result);
+              return result;
             })
             .catch((error) => {
               console.log(error);
@@ -72,7 +73,7 @@ module.exports = {
           },
         })
         .then((data) => {
-          res.status(200).json(data).end();
+          res.status(200).send(data).end();
         })
         .catch((error) => {
           console.log(error);

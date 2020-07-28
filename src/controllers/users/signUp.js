@@ -18,7 +18,7 @@ module.exports = {
         if (!created) {
           res.status(409).json({ message: "Already exists user" });
         } else {
-          res.status(200).send(user.dataValues);
+          res.status(201).send(user.dataValues);
         }
       })
       .catch((err) => {

@@ -32,7 +32,7 @@ module.exports = {
             });
           }
         } else {
-          res.status(404).json({ message: "unvaild user" });
+          res.status(404).json({ message: "unvalid user." });
         }
       })
       .catch((err) => {
