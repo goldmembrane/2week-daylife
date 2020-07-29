@@ -1,6 +1,6 @@
 module.exports = {
   development: {
-    username: "root",
+    username: "AAA",
     password: process.env.DATABASE_PASSWORD,
     database: "SUL_database",
     host: "sul-database-deploy.csmeh7i5hzpa.ap-northeast-2.rds.amazonaws.com",
