@@ -38,7 +38,7 @@ module.exports = {
             convert.xml2json(response.data, {
             compact: false,
             spaces: 4,
-          });
+          })
         })
         .catch((error) => {
           console.log(error);
