@@ -16,7 +16,7 @@ module.exports = {
       const targetParams = `target=prec`;
       const keywordParams = `query=${encodeURI(keywords)}`;
       const typeParams = `type=XML`;
-      const displayParams = `display=100`;
+      const displayParams = `display=1`;
 
       const resultURL =
         url +
@@ -29,26 +29,27 @@ module.exports = {
         "&" +
         displayParams;
 
+      var judicate = axios({
+        method: "get",
+        url: resultURL,
+        responseType: "xml",
+      })
+        .then((response) => {
+          let jsonData = convert.xml2json(response.data, {
+            compact: false,
+            spaces: 4,
+          });
+          console.log(jsonData, "\n");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
       keyword
         .create({
           user_id: userId,
           keyword: keywords,
-          judicate: axios({
-            method: "get",
-            url: resultURL,
-            responseType: "xml",
-          })
-            .then((response) => {
-              let result = convert.xml2json(response.data, {
-                compact: false,
-                spaces: 4,
-              });
-              console.log(result);
-              return result;
-            })
-            .catch((error) => {
-              console.log(error);
-            }),
+          judicate: judicate,
         })
         .then((data) => {
           res.status(201).json({ message: "Success" }).end();
@@ -64,12 +65,12 @@ module.exports = {
     if (!token) {
       res.status(401).json({ message: "need user session" }).end();
     } else {
-      let userId = jwt.verify(token, process.env.JWT_SECRET).id;
+      let keywords = req.query.keyword;
 
       keyword
         .findAll({
           where: {
-            user_id: userId,
+            keyword: keywords,
           },
         })
         .then((data) => {
