@@ -29,11 +29,7 @@ module.exports = {
         "&" +
         displayParams;
 
-      keyword
-        .create({
-          user_id: userId,
-          keyword: keywords,
-          judicate: axios({
+      var judicate = axios({
         method: "get",
         url: resultURL,
         responseType: "xml",
@@ -47,7 +43,13 @@ module.exports = {
         })
         .catch((error) => {
           console.log(error);
-        }),
+        });
+
+      keyword
+        .create({
+          user_id: userId,
+          keyword: keywords,
+          judicate: judicate,
         })
         .then((data) => {
           res.status(201).json({ message: "Success" }).end();
