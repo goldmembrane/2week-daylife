@@ -14,7 +14,7 @@ module.exports = {
 
       const url = `http://law.go.kr/DRF/lawSearch.do?OC=${process.env.API_KEY}`;
       const targetParams = `target=prec`;
-      const keywordParams = `query=${encodeURI(keywords)}`;
+      const keywordParams = `query=${keywords}`;
       const typeParams = `type=XML`;
       const displayParams = `display=1`;
 
