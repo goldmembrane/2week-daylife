@@ -2,9 +2,9 @@ module.exports = {
   development: {
     username: "root",
     password: process.env.DATABASE_PASSWORD,
-    database: "SUL_database",
-    host: "sul-database-deploy.csmeh7i5hzpa.ap-northeast-2.rds.amazonaws.com",
-    port: 3306,
+    database: "SUL",
+    host: "localhost",
+    port: 13306,
     dialect: "mysql",
     logging: false,
   },
