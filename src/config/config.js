@@ -4,7 +4,7 @@ module.exports = {
     password: process.env.DATABASE_PASSWORD,
     database: "SUL",
     host: "localhost",
-    port: 13306,
+    port: 3306,
     dialect: "mysql",
     logging: false,
   },
