@@ -14,7 +14,7 @@ module.exports = {
 
       const url = `http://law.go.kr/DRF/lawSearch.do?OC=${process.env.API_KEY}`;
       const targetParams = `target=prec`;
-      const keywordParams = `query=${keywords}`;
+      const keywordParams = `query=${encodeURI(keywords)}`;
       const typeParams = `type=XML`;
       const displayParams = `display=1`;
 
@@ -35,11 +35,10 @@ module.exports = {
         responseType: "xml",
       })
         .then((response) => {
-          let jsonData = convert.xml2json(response.data, {
+            convert.xml2json(response.data, {
             compact: false,
             spaces: 4,
           });
-          console.log(jsonData, "\n");
         })
         .catch((error) => {
           console.log(error);
