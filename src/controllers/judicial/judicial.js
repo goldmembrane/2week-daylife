@@ -35,7 +35,11 @@ module.exports = {
         responseType: "xml",
       })
         .then((response) => {
-           console.log(response.data);
+           let jsonData = convert.xml2json(response.data, {
+            compact: false,
+            spaces: 4,
+          });
+          console.log(jsonData, "\n");
         })
         .catch((error) => {
           console.log(error);
