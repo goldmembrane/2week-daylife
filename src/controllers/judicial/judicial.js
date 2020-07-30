@@ -16,7 +16,7 @@ module.exports = {
       const targetParams = `target=prec`;
       const keywordParams = `query=${encodeURI(keywords)}`;
       const typeParams = `type=XML`;
-      const displayParams = `display=1`;
+      const displayParams = `display=20`;
 
       const resultURL =
         url +
