@@ -36,7 +36,7 @@ module.exports = {
         .then((response) => {
 
            let jsonData = convert.xml2json(response.data, {
-            compact: false,
+            compact: true,
             spaces: 4,
           });
           console.log(jsonData, "\n");
