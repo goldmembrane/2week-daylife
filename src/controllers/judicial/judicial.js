@@ -10,7 +10,6 @@ module.exports = {
       res.status(401).json({ message: "need user session" }).end();
     } else {
       let keywords = req.body.keyword;
-      let userId = jwt.verify(token, process.env.JWT_SECRET).id;
 
       const url = `http://law.go.kr/DRF/lawSearch.do?OC=${process.env.API_KEY}`;
       const targetParams = `target=prec`;
@@ -29,8 +28,6 @@ module.exports = {
         "&" +
         displayParams;
 
-      console.log(resultURL);
-
       axios({
         method: "get",
         url: resultURL,
@@ -44,13 +41,20 @@ module.exports = {
           });
           console.log(jsonData, "\n");
           keyword
-            .create({
-              user_id: userId,
-              keyword: keywords,
-              judicate: jsonData,
+            .findOrCreate({
+              where: {
+                keyword: keywords,
+              },
+              defaults: {
+                judicate: jsonData,
+              },
             })
-            .then((data) => {
-              res.status(201).json({ message: "Success" }).end();
+            .then(async ([data, created]) => {
+              if (!created) {
+                res.status(201).send(jsonData);
+              } else {
+                res.status(200).send(data.dataValues.judicate);
+              }
             })
             .catch((error) => {
               console.log(error);
@@ -59,28 +63,6 @@ module.exports = {
         })
         .catch((error) => {
           console.log(error);
-        });
-    }
-  },
-  get: (req, res) => {
-    let token = req.cookies.token;
-    if (!token) {
-      res.status(401).json({ message: "need user session" }).end();
-    } else {
-      let keywords = req.query.keyword;
-
-      keyword
-        .findAll({
-          where: {
-            keyword: keywords,
-          },
-        })
-        .then((data) => {
-          res.status(200).send(data).end();
-        })
-        .catch((error) => {
-          console.log(error);
-          res.status(501).send(error);
         });
     }
   },
