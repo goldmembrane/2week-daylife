@@ -12,11 +12,11 @@ module.exports = {
       let keywords = req.body.keyword;
       let userId = jwt.verify(token, process.env.JWT_SECRET).id;
 
-      const url = `http://law.go.kr/DRF/lawSearch.do?OC=extinctictworld`;
+      const url = `http://law.go.kr/DRF/lawSearch.do?OC=${process.env.API_KEY}`;
       const targetParams = `target=prec`;
       const keywordParams = `query=${encodeURI(keywords)}`;
       const typeParams = `type=XML`;
-      const displayParams = `display=1`;
+      const displayParams = `display=100`;
 
       const resultURL =
         url +
@@ -37,8 +37,8 @@ module.exports = {
         responseType: "xml",
       })
         .then((response) => {
-          console.log(response.data);
-          let jsonData = convert.xml2json(response.data, {
+
+           let jsonData = convert.xml2json(response.data, {
             compact: false,
             spaces: 4,
           });
