@@ -12,7 +12,7 @@ module.exports = {
       let keywords = req.body.keyword;
       let userId = jwt.verify(token, process.env.JWT_SECRET).id;
 
-      const url = `http://law.go.kr/DRF/lawSearch.do?OC=${process.env.API_KEY}`;
+      const url = `http://law.go.kr/DRF/lawSearch.do?OC=extinctictworld`;
       const targetParams = `target=prec`;
       const keywordParams = `query=${encodeURI(keywords)}`;
       const typeParams = `type=XML`;
@@ -29,34 +29,36 @@ module.exports = {
         "&" +
         displayParams;
 
-      var judicate = axios({
+      console.log(resultURL);
+
+      axios({
         method: "get",
         url: resultURL,
         responseType: "xml",
       })
         .then((response) => {
+          console.log(response.data);
           let jsonData = convert.xml2json(response.data, {
             compact: false,
             spaces: 4,
           });
           console.log(jsonData, "\n");
+          keyword
+            .create({
+              user_id: userId,
+              keyword: keywords,
+              judicate: jsonData,
+            })
+            .then((data) => {
+              res.status(201).json({ message: "Success" }).end();
+            })
+            .catch((error) => {
+              console.log(error);
+              res.status(502).send(error);
+            });
         })
         .catch((error) => {
           console.log(error);
-        });
-
-      keyword
-        .create({
-          user_id: userId,
-          keyword: keywords,
-          judicate: judicate,
-        })
-        .then((data) => {
-          res.status(201).json({ message: "Success" }).end();
-        })
-        .catch((error) => {
-          console.log(error);
-          res.status(502).send(error);
         });
     }
   },
