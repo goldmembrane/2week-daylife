@@ -9,6 +9,7 @@ module.exports = {
         NODE_ENV: "development",
         DATABASE_PASSWORD: "aaasuldb",
         JWT_SECRET: "SUL",
+        API_KEY: "extinctictworld",
       },
     },
   ],
