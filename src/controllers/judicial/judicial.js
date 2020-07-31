@@ -11,7 +11,7 @@ module.exports = {
     } else {
       let keywords = req.body.keyword;
 
-      const url = `http://law.go.kr/DRF/lawSearch.do?OC=${process.env.API_KEY}`;
+      const url = `http://law.go.kr/DRF/lawSearch.do?OC=extinctictworld`;
       const targetParams = `target=prec`;
       const keywordParams = `query=${encodeURI(keywords)}`;
       const typeParams = `type=XML`;
