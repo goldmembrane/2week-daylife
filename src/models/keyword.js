@@ -12,19 +12,29 @@ module.exports = (sequelize, DataTypes) => {
       keyword.belongsTo(models.users, {
         foreignKey: "user_id",
       });
+
+      keyword.hasMany(models.judicate, {
+        foreignKey: "keyword_id",
+        as: "judicate",
+      });
+      keyword.hasMany(models.accept, {
+        foreignKey: "keyword_id",
+        as: "accept",
+      });
+      keyword.hasMany(models.dismiss, {
+        foreignKey: "keyword_id",
+        as: "dismiss",
+      });
     }
   }
   keyword.init(
     {
       user_id: DataTypes.INTEGER,
       keyword: DataTypes.STRING,
-      total: DataTypes.INTEGER,
-      dismiss: DataTypes.INTEGER,
-      judicate: DataTypes.JSON,
     },
     {
       sequelize,
-      modelName: "keyword",
+      modelName: "keywords",
       timestamps: false,
     }
   );

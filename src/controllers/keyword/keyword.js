@@ -29,23 +29,20 @@ module.exports = {
     if (!token) {
       res.status(401).json({ message: "need user session" }).end();
     } else {
-      let userId = jwt.verify(token, process.env.JWT_SECRET).id;
       let keywords = req.body.keyword;
-      let total = req.body.total;
-      let dismiss = req.body.dismiss;
 
       keyword
-        .create({
-          keyword: keywords,
-          total: total,
-          user_id: userId,
-          dismiss: dismiss,
+        .findOrCreate({
+          where: {
+            keyword: keywords,
+          },
         })
-        .then((data) => {
-          res.status(201).json({ message: "Success" }).end();
-        })
-        .catch((error) => {
-          res.status(502).send(error);
+        .then(async ([data, created]) => {
+          if (!created) {
+            res.status(409).json({ message: "Already exists" });
+          } else {
+            res.status(201).json({ message: "Success " });
+          }
         });
     }
   },
