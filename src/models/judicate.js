@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      judicate.belongsTo(models.keyword, {
+      judicate.belongsTo(models.keywords, {
         foreignKey: "keyword_id",
       });
     }

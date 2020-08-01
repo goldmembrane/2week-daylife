@@ -1,6 +1,5 @@
-const { keyword } = require("../../models");
+const { judicate, keywords } = require("../../models");
 const axios = require("axios");
-const jwt = require("jsonwebtoken");
 const convert = require("xml-js");
 
 module.exports = {
@@ -9,13 +8,14 @@ module.exports = {
     if (!token) {
       res.status(401).json({ message: "need user session" }).end();
     } else {
-      let keywords = req.body.keyword;
+      let keyword = req.body.keyword;
+      let keywordId = keywords.id;
 
       const url = `http://law.go.kr/DRF/lawSearch.do?OC=extinctictworld`;
       const targetParams = `target=prec`;
-      const keywordParams = `query=${encodeURI(keywords)}`;
+      const keywordParams = `query=${encodeURI(keyword)}`;
       const typeParams = `type=XML`;
-      const displayParams = `display=1`;
+      const displayParams = `display=5`;
 
       const resultURL =
         url +
@@ -35,30 +35,37 @@ module.exports = {
       })
         .then((response) => {
           console.log(response.data);
-          let jsonData = convert.xml2json(response.data, {
-            compact: false,
+          let data = convert.xml2json(response.data, {
+            compact: true,
             spaces: 4,
           });
-          console.log(jsonData, "\n");
-          keyword
-            .findOrCreate({
-              where: {
-                keyword: keywords,
-              },
-              defaults: {
-                judicate: jsonData,
-              },
+
+          console.log(data, "\n");
+
+          let jsonData = JSON.parse(data);
+
+          console.log(jsonData);
+
+          let judicialArray = jsonData.PrecSearch.prec;
+
+          let judicialNumber = judicialArray.map((element) => {
+            return element["판례일련번호"]._text;
+          });
+
+          console.log(judicialNumber);
+
+          let judicialNumberString = JSON.stringify(judicialNumber);
+
+          judicate
+            .create({
+              judicate: judicialNumberString,
+              keyword_id: keywordId,
             })
-            .then(async ([data, created]) => {
-              if (!created) {
-                res.status(201).send(jsonData);
-              } else {
-                res.status(200).send(data.dataValues.judicate);
-              }
+            .then((data) => {
+              res.status(201).json({ message: "Success" }).end();
             })
             .catch((error) => {
-              console.log(error);
-              res.status(502).send(error);
+              res.status(502).send(error).end();
             });
         })
         .catch((error) => {
