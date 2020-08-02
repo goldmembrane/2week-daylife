@@ -1,6 +1,7 @@
-const { judicate, keywords } = require("../../models");
+const { judicate, keywords, accept, dismiss } = require("../../models");
 const axios = require("axios");
 const convert = require("xml-js");
+const cheerio = require("cheerio");
 
 module.exports = {
   post: (req, res) => {
@@ -15,7 +16,7 @@ module.exports = {
       const targetParams = `target=prec`;
       const keywordParams = `query=${encodeURI(keyword)}`;
       const typeParams = `type=XML`;
-      const displayParams = `display=5`;
+      const displayParams = `display=20`;
 
       const resultURL =
         url +
@@ -67,6 +68,42 @@ module.exports = {
             .catch((error) => {
               res.status(502).send(error).end();
             });
+
+          const crawlingURL = judicialNumber.map((element) => {
+            return `http://www.law.go.kr/LSW/precInfoP.do?precSeq=${element}&mode=0`;
+          });
+
+          const getHtml = async (url) => {
+            try {
+              return await axios.get(url);
+            } catch (error) {
+              console.log(error);
+            }
+          };
+
+          for (let element of crawlingURL) {
+            getHtml(element).then((html) => {
+              let list = [];
+              const $ = cheerio.load(html.data);
+              const bodyList = $("#contentBody").children("#conScroll");
+
+              bodyList.each(function (i, elem) {
+                list[i] = {
+                  result: $(this).find("p.pty4_dep1").text(),
+                };
+                if (list[i].result.includes("기각한다")) {
+                  dismiss.create({
+                    dismiss: element,
+                  });
+                } else {
+                  accept.create({
+                    accept: element,
+                  });
+                }
+              });
+              return list;
+            });
+          }
         })
         .catch((error) => {
           console.log(error);
