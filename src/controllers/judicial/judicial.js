@@ -62,7 +62,7 @@ module.exports = {
               keyword_id: keywordId,
             })
             .then((data) => {
-              res.status(201).json({ message: "Success" }).end();
+              res.status(201).send(judicialNumberString).end();
             })
             .catch((error) => {
               res.status(502).send(error).end();
