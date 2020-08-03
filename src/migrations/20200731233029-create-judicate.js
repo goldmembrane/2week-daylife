@@ -12,7 +12,7 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       judicate: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
       },
       title: {
         type: Sequelize.TEXT,
@@ -21,7 +21,7 @@ module.exports = {
         type: Sequelize.TEXT,
       },
       keyword: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
       },
     });
   },
