@@ -43,10 +43,20 @@ module.exports = {
 
           let jsonData = JSON.parse(data);
 
-          let judicialArray = jsonData.PrecSearch.prec;
+          let judicialNumberArray = jsonData.PrecSearch.prec;
+          let judicialTitleArray = jsonData.PrecSearch.prec;
+          let judicialSubtitleArray = jsonData.PrecSearch.prec;
 
-          let judicialNumber = judicialArray.map((element) => {
+          let judicialNumber = judicialNumberArray.map((element) => {
             return element["판례일련번호"]._text;
+          });
+
+          let judicialTitle = judicialTitleArray.map((element) => {
+            return element["사건명"]._cdata;
+          });
+
+          let judicialSubTitle = judicialSubtitleArray.map((element) => {
+            return element["사건번호"]._text;
           });
 
           const crawlingURL = judicialNumber.map((element) => {
@@ -74,35 +84,58 @@ module.exports = {
                   subtitle: $(this).find("div.subtit1").text(),
                 };
 
-                judicate.create({
-                  title: list[i].title,
-                  subtitle: list[i].subtitle,
-                  judicate: element,
-                  user_id: userId,
-                  keyword: keywords,
-                });
                 if (list[i].result.includes("기각한다")) {
-                  dismiss.create({
-                    dismiss: element,
-                    title: list[i].title,
-                    subtitle: list[i].subtitle,
-                    user_id: userId,
-                    keyword: keywords,
+                  dismiss.findOrCreate({
+                    where: {
+                      keyword: keywords,
+                      user_id: userId,
+                    },
+                    defaults: {
+                      dismiss: element,
+                      title: list[i].title,
+                      subtitle: list[i].subtitle,
+                    },
                   });
                 } else {
-                  accept.create({
-                    accept: element,
-                    title: list[i].title,
-                    subtitle: list[i].subtitle,
-                    user_id: userId,
-                    keyword: keywords,
+                  accept.findOrCreate({
+                    where: {
+                      keyword: keywords,
+                      user_id: userId,
+                    },
+                    defaults: {
+                      accept: element,
+                      title: list[i].title,
+                      subtitle: list[i].subtitle,
+                    },
                   });
                 }
               });
-              return list;
             });
           }
-          res.status(201).json({ message: "Success" }).end();
+
+          let judicialNumberString = JSON.stringify(judicialNumber);
+          let judicialTitleString = JSON.stringify(judicialTitle);
+          let judicialSubTitleString = JSON.stringify(judicialSubTitle);
+
+          judicate
+            .findOrCreate({
+              where: {
+                keyword: keywords,
+                user_id: userId,
+              },
+              defaults: {
+                judicate: judicialNumberString,
+                title: judicialTitleString,
+                subtitle: judicialSubTitleString,
+              },
+            })
+            .then(async ([data, created]) => {
+              if (!created) {
+                res.status(200).send(data.dataValues).end();
+              } else {
+                res.status(201).send(judicialNumberString).end();
+              }
+            });
         })
         .catch((error) => {
           console.log(error);

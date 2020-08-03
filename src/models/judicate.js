@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
   judicate.init(
     {
       user_id: DataTypes.INTEGER,
-      judicate: DataTypes.STRING,
+      judicate: DataTypes.TEXT,
       title: DataTypes.TEXT,
       subtitle: DataTypes.TEXT,
       keyword: DataTypes.STRING,
