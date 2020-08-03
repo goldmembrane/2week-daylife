@@ -14,15 +14,15 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       keyword.hasMany(models.judicate, {
-        foreignKey: "keyword_id",
+        foreignKey: "id",
         as: "judicate",
       });
       keyword.hasMany(models.accept, {
-        foreignKey: "keyword_id",
+        foreignKey: "id",
         as: "accept",
       });
       keyword.hasMany(models.dismiss, {
-        foreignKey: "keyword_id",
+        foreignKey: "id",
         as: "dismiss",
       });
     }
@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "keywords",
+      modelName: "keyword",
       timestamps: false,
     }
   );

@@ -8,10 +8,19 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      keyword_id: {
+      user_id: {
         type: Sequelize.INTEGER,
       },
       judicate: {
+        type: Sequelize.STRING,
+      },
+      title: {
+        type: Sequelize.TEXT,
+      },
+      subtitle: {
+        type: Sequelize.TEXT,
+      },
+      keyword: {
         type: Sequelize.STRING,
       },
     });
