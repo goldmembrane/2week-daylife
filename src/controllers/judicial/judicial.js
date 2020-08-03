@@ -36,17 +36,12 @@ module.exports = {
         responseType: "xml",
       })
         .then((response) => {
-          console.log(response.data);
           let data = convert.xml2json(response.data, {
             compact: true,
             spaces: 4,
           });
 
-          console.log(data, "\n");
-
           let jsonData = JSON.parse(data);
-
-          console.log(jsonData);
 
           let judicialArray = jsonData.PrecSearch.prec;
 
