@@ -133,7 +133,14 @@ module.exports = {
               if (!created) {
                 res.status(200).send(data.dataValues).end();
               } else {
-                res.status(201).send(judicialNumberString).end();
+                res
+                  .status(201)
+                  .json({
+                    number: judicialNumberString,
+                    title: judicialTitleString,
+                    subtitle: judicialSubTitleString,
+                  })
+                  .end();
               }
             });
         })
