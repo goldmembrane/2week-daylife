@@ -121,7 +121,7 @@ module.exports = {
         .findAll({
           where: {
             user_id: userId,
-            keyowrd: keyword,
+            keyword: keyword,
           },
         })
         .then((data) => {
