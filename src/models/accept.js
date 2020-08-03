@@ -9,15 +9,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      accept.belongsTo(models.keywords, {
-        foreignKey: "keyword_id",
+      accept.belongsTo(models.users, {
+        foreignKey: "user_id",
       });
     }
   }
   accept.init(
     {
-      keyword_id: DataTypes.INTEGER,
+      user_id: DataTypes.INTEGER,
       accept: DataTypes.STRING,
+      title: DataTypes.TEXT,
+      subtitle: DataTypes.TEXT,
+      keyword: DataTypes.STRING,
     },
     {
       sequelize,

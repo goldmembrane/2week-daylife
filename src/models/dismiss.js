@@ -9,15 +9,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      dismiss.belongsTo(models.keywords, {
-        foreignKey: "keyword_id",
+      dismiss.belongsTo(models.users, {
+        foreignKey: "user_id",
       });
     }
   }
   dismiss.init(
     {
-      keyword_id: DataTypes.INTEGER,
+      user_id: DataTypes.INTEGER,
       dismiss: DataTypes.STRING,
+      title: DataTypes.TEXT,
+      subtitle: DataTypes.TEXT,
+      keyword: DataTypes.STRING,
     },
     {
       sequelize,

@@ -30,16 +30,18 @@ module.exports = {
       res.status(401).json({ message: "need user session" }).end();
     } else {
       let keywords = req.body.keyword;
+      let userId = jwt.verify(token, process.env.JWT_SECRET).id;
 
       keyword
         .findOrCreate({
           where: {
             keyword: keywords,
+            user_id: userId,
           },
         })
         .then(async ([data, created]) => {
           if (!created) {
-            res.status(409).json({ message: "Already exists" });
+            res.status(409).json({ message: "Already exists" }).end();
           } else {
             res.status(201).json({ message: "Success " });
           }
