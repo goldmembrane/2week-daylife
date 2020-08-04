@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const axios = require("axios");
 const convert = require("xml-js");
 const cheerio = require("cheerio");
+const { defaults } = require("request");
 
 module.exports = {
   post: (req, res) => {
@@ -98,20 +99,28 @@ module.exports = {
                 };
 
                 if (list[i].result.includes("기각한다")) {
-                  dismiss.create({
-                    user_id: userId,
-                    dismiss: element,
-                    keyword: keywords,
-                    title: list[i].title,
-                    subtitle: list[i].subtitle,
+                  dismiss.findOrCreate({
+                    where: {
+                      dismiss: element,
+                    },
+                    defaults: {
+                      user_id: userId,
+                      keyword: keywords,
+                      title: list[i].title,
+                      subtitle: list[i].subtitle,
+                    },
                   });
                 } else {
-                  accept.create({
-                    user_id: userId,
-                    accept: element,
-                    keyword: keywords,
-                    title: list[i].title,
-                    subtitle: list[i].subtitle,
+                  accept.findOrCreate({
+                    where: {
+                      accept: element,
+                    },
+                    defaults: {
+                      user_id: userId,
+                      keyword: keywords,
+                      title: list[i].title,
+                      subtitle: list[i].subtitle,
+                    },
                   });
                 }
               });
