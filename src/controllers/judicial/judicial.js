@@ -1,4 +1,4 @@
-const { judicate, accept, dismiss } = require("../../models");
+const { judicate, keyword, accept, dismiss } = require("../../models");
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
 const convert = require("xml-js");
@@ -12,6 +12,21 @@ module.exports = {
     } else {
       let keywords = req.body.keyword;
       let userId = jwt.verify(token, process.env.JWT_SECRET).id;
+
+      keyword
+        .findOrCreate({
+          where: {
+            keyword: keywords,
+            user_id: userId,
+          },
+        })
+        .then(async ([data, created]) => {
+          if (!created) {
+            res.status(409).json({ message: "Already exists" }).end();
+          } else {
+            res.status(201).json({ message: "Success " });
+          }
+        });
 
       const url = `http://law.go.kr/DRF/lawSearch.do?OC=extinctictworld`;
       const targetParams = `target=prec`;
