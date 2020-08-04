@@ -21,10 +21,8 @@ module.exports = {
           },
         })
         .then(async ([data, created]) => {
-          if (!created) {
-            res.status(409).json({ message: "Already exists" }).end();
-          } else {
-            res.status(201).json({ message: "Success " });
+          if (created) {
+            res.status(201).json({ message: "Success" }).end();
           }
         });
 
@@ -153,30 +151,6 @@ module.exports = {
         })
         .catch((error) => {
           console.log(error);
-        });
-    }
-  },
-  get: (req, res) => {
-    let token = req.cookies.token;
-    if (!token) {
-      res.status(401).json({ message: "need user session" }).end();
-    } else {
-      let userId = jwt.verify(token, process.env.JWT_SECRET).id;
-
-      let keyword = req.query.keyword;
-      judicate
-        .findAll({
-          where: {
-            user_id: userId,
-            keyword: keyword,
-          },
-        })
-        .then((data) => {
-          res.status(200).send(data).end();
-        })
-        .catch((error) => {
-          console.log(error);
-          res.status(404).json({ message: "not found judicate" });
         });
     }
   },
