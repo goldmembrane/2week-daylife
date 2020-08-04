@@ -85,28 +85,20 @@ module.exports = {
                 };
 
                 if (list[i].result.includes("기각한다")) {
-                  dismiss.findOrCreate({
-                    where: {
-                      keyword: keywords,
-                      user_id: userId,
-                    },
-                    defaults: {
-                      dismiss: element,
-                      title: list[i].title,
-                      subtitle: list[i].subtitle,
-                    },
+                  dismiss.create({
+                    user_id: userId,
+                    dismiss: element,
+                    keyword: keywords,
+                    title: list[i].title,
+                    subtitle: list[i].subtitle,
                   });
                 } else {
-                  accept.findOrCreate({
-                    where: {
-                      keyword: keywords,
-                      user_id: userId,
-                    },
-                    defaults: {
-                      accept: element,
-                      title: list[i].title,
-                      subtitle: list[i].subtitle,
-                    },
+                  accept.create({
+                    user_id: userId,
+                    accept: element,
+                    keyword: keywords,
+                    title: list[i].title,
+                    subtitle: list[i].subtitle,
                   });
                 }
               });
