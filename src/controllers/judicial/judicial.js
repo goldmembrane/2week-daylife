@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken");
 const axios = require("axios");
 const convert = require("xml-js");
 const cheerio = require("cheerio");
-const { defaults } = require("request");
 
 module.exports = {
   post: (req, res) => {
@@ -14,18 +13,12 @@ module.exports = {
       let keywords = req.body.keyword;
       let userId = jwt.verify(token, process.env.JWT_SECRET).id;
 
-      keyword
-        .findOrCreate({
-          where: {
-            keyword: keywords,
-            user_id: userId,
-          },
-        })
-        .then(async ([data, created]) => {
-          if (created) {
-            res.status(201).json({ message: "Success" }).end();
-          }
-        });
+      keyword.findOrCreate({
+        where: {
+          keyword: keywords,
+          user_id: userId,
+        },
+      });
 
       const url = `http://law.go.kr/DRF/lawSearch.do?OC=extinctictworld`;
       const targetParams = `target=prec`;
@@ -143,14 +136,14 @@ module.exports = {
                 subtitle: judicialSubTitleString,
               },
             })
-            .then(async ([data, created]) => {
+            .then(([data, created]) => {
               if (!created) {
                 res.status(200).send(data.dataValues).end();
               } else {
                 res
                   .status(201)
                   .json({
-                    number: judicialNumberString,
+                    judicate: judicialNumberString,
                     title: judicialTitleString,
                     subtitle: judicialSubTitleString,
                   })
