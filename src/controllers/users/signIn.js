@@ -30,6 +30,8 @@ module.exports = {
                 res.json({ id: user.dataValues.id });
               }
             });
+          } else {
+            res.status(400).json({ message: "error password." });
           }
         } else {
           res.status(404).json({ message: "unvalid user." });
