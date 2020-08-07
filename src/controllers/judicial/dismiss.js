@@ -15,7 +15,6 @@ module.exports = {
           },
         })
         .then((data) => {
-          console.log(data);
           res.status(200).send(data).end();
         })
         .catch((error) => {
