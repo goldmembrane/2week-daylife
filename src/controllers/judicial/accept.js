@@ -1,5 +1,4 @@
 const { accept } = require("../../models");
-const jwt = require("jsonwebtoken");
 
 module.exports = {
   get: (req, res) => {
@@ -7,15 +6,12 @@ module.exports = {
     if (!token) {
       res.status(401).json({ message: "need user session" }).end();
     } else {
-      let userId = jwt.verify(token, process.env.JWT_SECRET).id;
-
       let keyword = req.query.keyword;
 
       accept
         .findAll({
           where: {
             keyword: keyword,
-            user_id: userId,
           },
         })
         .then((data) => {
