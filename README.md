@@ -82,7 +82,6 @@ cheerio <br />
 #### 황병현
 ## 팀원
 #### 김준섭, 조규창
-<hr>
 
 # :people_holding_hands: Position
 ### 황병현 : full-stack <br />
